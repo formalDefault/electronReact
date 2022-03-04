@@ -1,6 +1,8 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, session} = require('electron')
 const path = require('path')
+const express = require('express'); 
+const appEx = express();
 
 function createWindow () {
   // Create the browser window.
@@ -10,19 +12,31 @@ function createWindow () {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
+    
   })
-
+  mainWindow.setMenuBarVisibility(false)
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  // mainWindow.loadFile('index.html')
+  // mainWindow.loadFile('GUI-crm/build/index.html')
+  
+  mainWindow.loadURL('http://localhost:9000/');
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
+ 
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  // session.defaultSession.clearStorageData({storages: ['cookies']}) //borrar cookies
+  appEx.use(express.static(path.join(__dirname, 'build'))); 
+  appEx.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  }); 
+  appEx.listen(9000);
+  
   createWindow()
 
   app.on('activate', function () {

@@ -18,5 +18,9 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^17.1.0"
+  },
+  "dependencies": {
+    "express": "^4.17.3",
+    "path": "^0.12.7"
   }
 }
